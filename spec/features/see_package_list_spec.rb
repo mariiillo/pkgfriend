@@ -11,5 +11,6 @@ RSpec.feature "Packages" do
     expect(page).to have_content package.depends
     expect(page).to have_content package.md5_sum
     expect(page).to have_content package.maintainer
+    expect(page).to have_content package.versions.map(&:number)
   end
 end
