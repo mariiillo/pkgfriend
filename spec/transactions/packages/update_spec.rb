@@ -193,7 +193,7 @@ RSpec.describe Packages::Update do
     end
 
     describe "persist_package_info" do
-      it "stores the packages in the db" do
+      it "stores the packages (and its version) in the db" do
         input = [
           {
             "Depends"=>"R (>= 2.15.0), xtable, pbapply",
@@ -216,6 +216,50 @@ RSpec.describe Packages::Update do
         expect(package.maintainer).to eq "Scott Fortmann-Roe <scottfr@berkeley.edu>"
         expect(package.versions.count).to eq 1
         expect(package.versions.first.number).to eq "1.0.0"
+      end
+
+      context "if the package was already stored" do
+        it "does not create a duplicate" do
+          FactoryBot.create(:package)
+          input = [
+            {
+              "Depends"=>"R (>= 2.15.0), xtable, pbapply",
+              "DownloadUrl"=>"https://cran.r-project.org/src/contrib/A3_1.0.0.tar.gz",
+              "FilePath"=>"vendor/download/A3_1.0.0.tar.gz",
+              "MD5sum"=>"027ebdd8affce8f0effaecfcd5f5ade2",
+              "Package"=>"A3",
+              "Version"=>"1.0.0",
+              "Maintainer"=>"Scott Fortmann-Roe <scottfr@berkeley.edu>"
+            }
+          ]
+
+          transaction = -> { described_class.new.persist_package_info(input) }
+
+          expect(transaction).not_to change { Package.count }
+        end
+      end
+
+      context "if the version was already stored" do
+        it "does not create a duplicate" do
+          package = FactoryBot.create(:package)
+          version = FactoryBot.create(:version, package: package)
+
+          input = [
+            {
+              "Depends"=>"R (>= 2.15.0), xtable, pbapply",
+              "DownloadUrl"=>"https://cran.r-project.org/src/contrib/A3_1.0.0.tar.gz",
+              "FilePath"=>"vendor/download/A3_1.0.0.tar.gz",
+              "MD5sum"=>"027ebdd8affce8f0effaecfcd5f5ade2",
+              "Package"=>"A3",
+              "Version"=>"1.0.0",
+              "Maintainer"=>"Scott Fortmann-Roe <scottfr@berkeley.edu>"
+            }
+          ]
+
+          transaction = -> { described_class.new.persist_package_info(input) }
+
+          expect(transaction).not_to change { Version.count }
+        end
       end
     end
 

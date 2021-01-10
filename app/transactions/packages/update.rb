@@ -73,13 +73,15 @@ module Packages
 
     def persist_package_info(input)
       input.each do |package_hash|
-        package = Package.create(
+        package = Package.first_or_create(
           name: package_hash["Package"],
           depends: package_hash["Depends"],
           md5_sum: package_hash["MD5sum"],
           maintainer: package_hash["Maintainer"],
         )
-        package.versions.create(number: package_hash["Version"])
+        unless package.versions.map(&:number).include?(package_hash["Version"])
+          package.versions.create(number: package_hash["Version"])
+        end
       end
     end
 
