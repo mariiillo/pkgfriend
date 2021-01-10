@@ -214,8 +214,18 @@ RSpec.describe Packages::Update do
         expect(package.depends).to eq "R (>= 2.15.0), xtable, pbapply"
         expect(package.md5_sum).to eq "027ebdd8affce8f0effaecfcd5f5ade2"
         expect(package.maintainer).to eq "Scott Fortmann-Roe <scottfr@berkeley.edu>"
-        # expect(package.versions.count).to eq 1
-        # expect(package.versions.firt).to eq "1.0.0"
+        expect(package.versions.count).to eq 1
+        expect(package.versions.first.number).to eq "1.0.0"
+      end
+    end
+
+    describe "delete_downloaded_packages" do
+      it "deletes the download directory used in the process" do
+        FileUtils.mkdir("vendor/download/")
+
+        described_class.new.delete_downloaded_packages
+
+        expect(Dir.exist?('vendor/download')).to eq false
       end
     end
   end

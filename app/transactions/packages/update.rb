@@ -79,11 +79,11 @@ module Packages
           md5_sum: package_hash["MD5sum"],
           maintainer: package_hash["Maintainer"],
         )
-        # package.versions.create(number: package_hash["Version"])
+        package.versions.create(number: package_hash["Version"])
       end
     end
 
-    def delete_downloaded_packages(_input)
+    def delete_downloaded_packages
       FileUtils.rm_rf(DOWNLOAD_PATH)
     end
   end

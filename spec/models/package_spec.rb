@@ -8,4 +8,8 @@ RSpec.describe Package, type: :model do
     it { is_expected.to have_db_column(:md5_sum) }
     it { is_expected.to have_db_column(:maintainer) }
   end
+
+  describe "associations" do
+    it { is_expected.to have_many(:versions) }
+  end
 end
