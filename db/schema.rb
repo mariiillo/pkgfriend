@@ -15,10 +15,8 @@ ActiveRecord::Schema.define(version: 2021_01_10_140805) do
   create_table "packages", force: :cascade do |t|
     t.string "name"
     t.string "depends"
-    t.string "suggests"
-    t.string "license"
     t.string "md5_sum"
-    t.string "needs_compilation"
+    t.string "maintainer"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

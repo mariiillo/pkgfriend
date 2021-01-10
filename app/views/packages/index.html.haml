@@ -2,15 +2,11 @@
   %tr
     %th Name
     %th Depends
-    %th Suggests
-    %th License
     %th MD5Sum
-    %th Needs Compilation
+    %th Maintainer
   - @packages.each do |package|
     %tr
       %td= package.name
       %td= package.depends
-      %td= package.suggests
-      %td= package.license
       %td= package.md5_sum
-      %td= package.needs_compilation
+      %td= package.maintainer
